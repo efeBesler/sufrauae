@@ -1,0 +1,308 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Sufra UAE: find restaurants across the UAE by cuisine, signature dish, location, rating and type of dining.">
+<meta property="og:title" content="Sufra UAE">
+<meta property="og:description" content="Where to eat across the seven emirates.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2317352A'/%3E%3Ctext x='32' y='45' font-size='38' text-anchor='middle' fill='%23C9820F' font-family='Georgia,serif'%3ES%3C/text%3E%3C/svg%3E">
+<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Sufra UAE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Figtree:wght@400;500;600;700&family=Reem+Kufi:wght@500;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: masthead band with search, sticky filter rail, responsive grid of listing tiles, slide-in detail sheet */
+:root{
+  --bg:#F2F4EF; --surface:#FFFFFF; --ink:#18221E; --muted:#5B6862; --line:#D9DED6;
+  --saffron:#C9820F; --saffron-soft:#F6E7C9; --cardamom:#2C6A4E; --cardamom-soft:#DCEBE2; --band:#17352A; --band-ink:#F2F4EF;
+  --star:#C9820F;
+  --f-display:"Young Serif", Georgia, "Times New Roman", serif;
+  --f-body:"Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-arabic:"Reem Kufi", "Geeza Pro", "Noto Kufi Arabic", sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#111815; --surface:#18211D; --ink:#E8EDE9; --muted:#9AA8A1; --line:#2A3631;
+  --saffron:#E9A63A; --saffron-soft:#3A2D14; --cardamom:#6FC198; --cardamom-soft:#1D3328; --band:#0C1F17; --band-ink:#E8EDE9; --star:#E9A63A; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#111815; --surface:#18211D; --ink:#E8EDE9; --muted:#9AA8A1; --line:#2A3631;
+  --saffron:#E9A63A; --saffron-soft:#3A2D14; --cardamom:#6FC198; --cardamom-soft:#1D3328; --band:#0C1F17; --band-ink:#E8EDE9; --star:#E9A63A; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.5}
+.wrap{max-width:1180px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--saffron);outline-offset:2px}
+
+/* masthead */
+.mast{background:var(--band);color:var(--band-ink);position:relative;overflow:hidden}
+.mast::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.08;
+  background-image:radial-gradient(circle at 1px 1px, currentColor 1px, transparent 0);background-size:18px 18px}
+.mast .wrap{position:relative;z-index:1;padding-block:28px 26px;display:grid;gap:18px}
+.brand{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+.brand h1{font-family:var(--f-display);font-weight:400;font-size:clamp(34px,6vw,52px);line-height:1;margin:0;letter-spacing:-.01em}
+.brand h1 span{color:var(--saffron)}
+.brand .ar{font-family:var(--f-arabic);font-size:clamp(26px,4.5vw,38px);color:var(--saffron);line-height:1}
+.tag{margin:0;max-width:60ch;opacity:.85;font-size:16px}
+.search{display:flex;gap:8px;flex-wrap:wrap}
+.search input{flex:1 1 260px;min-width:0;padding:13px 16px;border-radius:10px;border:1px solid transparent;background:var(--surface);color:var(--ink);font-size:16px}
+.stats{display:flex;gap:22px;flex-wrap:wrap;font-family:var(--f-mono);font-size:12px;letter-spacing:.04em;text-transform:uppercase;opacity:.8}
+.stats b{font-family:var(--f-display);font-weight:400;font-size:20px;letter-spacing:0;text-transform:none;margin-right:6px;color:var(--saffron)}
+
+/* filter rail */
+.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.rail .wrap{padding-block:12px;display:grid;gap:10px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.lbl{font-family:var(--f-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);min-width:62px}
+.chip{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:5px 12px;font-size:13px;cursor:pointer;white-space:nowrap}
+.chip:hover{border-color:var(--cardamom)}
+.chip[aria-pressed="true"]{background:var(--cardamom);border-color:var(--cardamom);color:var(--surface)}
+.ctrl{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-left:auto}
+select{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:6px 10px;font-size:13px}
+.fav-toggle{display:inline-flex;align-items:center;gap:6px}
+
+/* results */
+main .wrap{padding-block:22px 48px}
+.res-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.res-head h2{font-family:var(--f-display);font-weight:400;font-size:22px;margin:0}
+.res-head .note{color:var(--muted);font-size:13px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:14px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 16px 14px;display:grid;grid-template-rows:auto auto 1fr auto;gap:10px;cursor:pointer;text-align:left;transition:border-color .15s, transform .15s}
+.card:hover{border-color:var(--cardamom);transform:translateY(-2px)}
+.c-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.c-name{font-family:var(--f-display);font-size:19px;line-height:1.2;margin:0;text-wrap:balance}
+.c-loc{color:var(--muted);font-size:13px;margin-top:2px}
+.rate{display:flex;flex-direction:column;align-items:flex-end;flex:none}
+.rate b{font-family:var(--f-mono);font-size:17px;font-weight:500;font-variant-numeric:tabular-nums}
+.stars{color:var(--star);font-size:11px;letter-spacing:1px;white-space:nowrap}
+.badges{display:flex;gap:6px;flex-wrap:wrap}
+.b{font-size:12px;padding:2px 9px;border-radius:6px;font-weight:500}
+.b-cui{background:var(--saffron-soft);color:var(--ink)}
+.b-type{background:var(--cardamom-soft);color:var(--ink)}
+.b-price{font-family:var(--f-mono);color:var(--muted);border:1px solid var(--line)}
+.sig{border-top:1px dashed var(--line);padding-top:10px}
+.sig small{display:block;font-family:var(--f-mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.sig p{margin:2px 0 0;font-weight:600}
+.c-foot{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.emi{font-family:var(--f-mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--cardamom)}
+.heart{background:none;border:0;cursor:pointer;font-size:18px;line-height:1;padding:4px;color:var(--muted)}
+.heart[aria-pressed="true"]{color:var(--saffron)}
+.empty{padding:48px 16px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:12px}
+.empty button{margin-top:10px}
+.btn{border:1px solid var(--cardamom);background:var(--cardamom);color:var(--surface);border-radius:8px;padding:8px 14px;cursor:pointer;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+.btn.ghost{background:transparent;color:var(--cardamom)}
+footer{border-top:1px solid var(--line);color:var(--muted);font-size:13px}
+footer .wrap{padding-block:20px}
+
+/* detail sheet */
+.scrim{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:20}
+.sheet{position:fixed;top:0;right:0;bottom:0;width:min(440px,100%);background:var(--surface);z-index:21;overflow-y:auto;
+  padding:calc(24px + env(safe-area-inset-top,0px)) max(22px,env(safe-area-inset-right,0px)) calc(24px + env(safe-area-inset-bottom,0px)) 22px;
+  box-shadow:-12px 0 40px rgba(0,0,0,.18);display:grid;gap:18px;align-content:start}
+@media (prefers-reduced-motion:no-preference){.sheet{animation:slide .22s ease-out}@keyframes slide{from{transform:translateX(30px);opacity:.4}}}
+.sheet h3{font-family:var(--f-display);font-weight:400;font-size:28px;line-height:1.15;margin:0;text-wrap:balance}
+.close{justify-self:end;background:none;border:1px solid var(--line);border-radius:8px;padding:4px 10px;cursor:pointer}
+.facts{display:grid;grid-template-columns:auto 1fr;gap:8px 16px;margin:0}
+.facts dt{font-family:var(--f-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding-top:3px}
+.facts dd{margin:0;font-weight:500}
+.sheet .about{margin:0;color:var(--ink);max-width:60ch}
+.big-rate{display:flex;align-items:center;gap:12px}
+.big-rate b{font-family:var(--f-display);font-weight:400;font-size:44px;line-height:1}
+.big-rate .stars{font-size:16px}
+.acts{display:flex;gap:8px;flex-wrap:wrap}
+@media (max-width:640px){.ctrl{margin-left:0}.row{min-width:0;max-width:100%}.lbl{min-width:0;width:100%}.chips-scroll{flex:1 1 100%;min-width:0;flex-wrap:nowrap;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}}
+</style>
+</head>
+<body>
+
+<header class="mast">
+  <div class="wrap">
+    <div class="brand"><h1>Sufra <span>UAE</span></h1><span class="ar" lang="ar">سفرة</span></div>
+    <p class="tag">Where to eat across the seven emirates. Browse restaurants by cuisine, signature dish, location, rating and style of dining.</p>
+    <div class="search">
+      <input id="q" type="search" placeholder="Search a restaurant, dish or area, e.g. machboos, Satwa, ramen" aria-label="Search restaurants">
+    </div>
+    <div class="stats" id="stats"></div>
+  </div>
+</header>
+
+<nav class="rail" aria-label="Filters">
+  <div class="wrap">
+    <div class="row"><span class="lbl">Emirate</span><div class="row chips-scroll" id="f-emirate"></div></div>
+    <div class="row"><span class="lbl">Type</span><div class="row chips-scroll" id="f-type"></div>
+      <div class="ctrl">
+        <select id="f-cuisine" aria-label="Cuisine"></select>
+        <select id="f-price" aria-label="Price">
+          <option value="">Any price</option><option value="1">AED · under 60</option><option value="2">AED AED · 60–150</option><option value="3">AED AED AED · 150–350</option><option value="4">AED AED AED AED · 350+</option>
+        </select>
+        <select id="sort" aria-label="Sort">
+          <option value="rating">Top rated</option><option value="name">A to Z</option><option value="priceAsc">Price: low to high</option><option value="priceDesc">Price: high to low</option>
+        </select>
+        <button class="chip fav-toggle" id="favOnly" aria-pressed="false">♥ Saved</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<main>
+  <div class="wrap">
+    <div class="res-head"><h2 id="count">Restaurants</h2><span class="note">Tap a restaurant for details and directions</span></div>
+    <div class="grid" id="grid"></div>
+  </div>
+</main>
+
+<footer><div class="wrap">Sufra UAE · Listings are a curated starting set compiled from public information. Ratings are approximate averages out of 5 and change over time, so check opening hours and current reviews before you go. Price bands are per person, without drinks.</div></footer>
+
+<div class="scrim" id="scrim" hidden></div>
+<aside class="sheet" id="sheet" hidden role="dialog" aria-modal="true" aria-labelledby="d-name"></aside>
+
+<script>
+const R = [
+ // Dubai
+ {n:"Al Ustad Special Kebab",e:"Dubai",a:"Al Fahidi, Bur Dubai",c:"Iranian",t:"Casual",d:"Chelo kebab with saffron rice",r:4.4,p:1,y:1978,x:"A family-run Bur Dubai institution, walls covered in photos of visitors, serving charcoal kebabs since the late 1970s."},
+ {n:"Ravi Restaurant",e:"Dubai",a:"Al Satwa",c:"Pakistani",t:"Casual",d:"Chicken tikka with dal and fresh naan",r:4.1,p:1,y:1978,x:"Open late, cheap and always busy. A Satwa landmark for curries and grills at any hour."},
+ {n:"Al Mallah",e:"Dubai",a:"Al Dhiyafah Road, Satwa",c:"Lebanese",t:"Street food",d:"Chicken shawarma",r:4.2,p:1,x:"Pavement tables on Al Dhiyafah Road, fresh juices and some of the city's best-loved shawarma."},
+ {n:"Arabian Tea House",e:"Dubai",a:"Al Fahidi Historical District",c:"Emirati",t:"Café",d:"Emirati breakfast with balaleet and chebab",r:4.4,p:2,x:"A shaded courtyard café in a restored wind-tower house, known for its traditional breakfast spread and karak."},
+ {n:"Al Fanar Restaurant & Café",e:"Dubai",a:"Dubai Festival City",c:"Emirati",t:"Casual",d:"Machboos laham (spiced lamb and rice)",r:4.3,p:2,x:"Styled after 1960s old Dubai, with home-style Emirati dishes like machboos, saloona and luqaimat."},
+ {n:"Logma",e:"Dubai",a:"BoxPark, Al Wasl Road",c:"Emirati",t:"Café",d:"Khameer bread and luqaimat",r:4.3,p:2,x:"Modern Emirati café food, from date-flavoured lattes to stuffed khameer sandwiches."},
+ {n:"Bu Qtair",e:"Dubai",a:"Umm Suqeim Fishing Harbour",c:"Seafood",t:"Casual",d:"Masala-fried fish and prawns with rice",r:4.3,p:2,x:"No menu and no frills. Pick the day's catch, it gets masala-rubbed and fried, and you eat by the harbour."},
+ {n:"Operation Falafel",e:"Dubai",a:"Sheikh Zayed Road and citywide",c:"Levantine",t:"Street food",d:"Falafel wrap with tahini",r:4.2,p:1,x:"Quick Levantine street food, from falafel and manakish to hummus bowls, open late."},
+ {n:"Salt",e:"Dubai",a:"Kite Beach, Jumeirah",c:"Burgers",t:"Street food",d:"Wagyu sliders with Lotus ice cream",r:4.3,p:2,x:"Began as a food truck and became a beach staple. Simple menu of sliders, fries and soft-serve."},
+ {n:"Bait Maryam",e:"Dubai",a:"Jumeirah Lakes Towers",c:"Levantine",t:"Casual",d:"Fatteh with chickpeas and yogurt",r:4.5,p:2,x:"Home-style Levantine cooking that feels like a family kitchen, generous and warm."},
+ {n:"Kinoya",e:"Dubai",a:"The Greens",c:"Japanese",t:"Casual",d:"Tonkotsu ramen",r:4.6,p:2,x:"A small, cosy izakaya with a long ramen queue and a playful Japanese small-plates menu."},
+ {n:"3 Fils",e:"Dubai",a:"Jumeirah Fishing Harbour",c:"Asian fusion",t:"Casual",d:"Toro tartare",r:4.5,p:3,x:"Harbour-side and unpretentious, with inventive Asian small plates that put it on regional best-of lists."},
+ {n:"Orfali Bros Bistro",e:"Dubai",a:"Wasl 51, Jumeirah",c:"Modern Middle Eastern",t:"Bistro",d:"Shish barak dumplings",r:4.6,p:3,x:"Three brothers from Aleppo cooking modern Syrian-inspired dishes, with an acclaimed dessert counter."},
+ {n:"Zuma",e:"Dubai",a:"Gate Village, DIFC",c:"Japanese",t:"Fine dining",d:"Miso-marinated black cod",r:4.5,p:4,x:"Contemporary izakaya-style dining with a robata grill, sushi counter and a lively DIFC crowd."},
+ {n:"La Petite Maison",e:"Dubai",a:"Gate Village, DIFC",c:"French",t:"Fine dining",d:"Warm prawns with olive oil",r:4.5,p:4,x:"Niçoise cooking in a bright, buzzing room. Dishes are made for sharing across the table."},
+ {n:"Ossiano",e:"Dubai",a:"Atlantis The Palm",c:"Seafood",t:"Fine dining",d:"Seasonal seafood tasting menu",r:4.6,p:4,x:"An underwater dining room beside a floor-to-ceiling aquarium, serving a long tasting menu."},
+ {n:"Pierchic",e:"Dubai",a:"Al Qasr, Madinat Jumeirah",c:"Seafood",t:"Fine dining",d:"Lobster with seasonal garnish",r:4.6,p:4,x:"Set at the end of a wooden pier with views of the Burj Al Arab, popular for sunset dinners."},
+ {n:"Trèsind Studio",e:"Dubai",a:"Palm Jumeirah",c:"Indian",t:"Fine dining",d:"Progressive Indian tasting menu",r:4.7,p:4,x:"An intimate chef's-table format that reworks regional Indian flavours over many small courses."},
+ {n:"Moonrise",e:"Dubai",a:"Eden House, Al Satwa",c:"Japanese",t:"Fine dining",d:"Omakase counter menu",r:4.8,p:4,x:"A tiny rooftop counter of about a dozen seats serving a Japanese-led omakase with local touches."},
+ {n:"Hoseki",e:"Dubai",a:"Bulgari Resort, Jumeirah Bay",c:"Japanese",t:"Fine dining",d:"Edomae sushi omakase",r:4.8,p:4,x:"A nine-seat sushi counter looking out over the Dubai skyline, run by a Japanese master chef."},
+ {n:"Il Borro Tuscan Bistro",e:"Dubai",a:"Jumeirah Al Naseem",c:"Italian",t:"Bistro",d:"Pici cacio e pepe",r:4.5,p:3,x:"Tuscan farm-to-table cooking linked to the Il Borro estate, with a beachside terrace."},
+ {n:"Gaia",e:"Dubai",a:"Gate Village, DIFC",c:"Greek",t:"Fine dining",d:"Fresh fish from the market display",r:4.5,p:4,x:"Mediterranean-Greek seafood in a white-washed room. Choose fish from the ice and pick a cooking style."},
+ {n:"Al Hadheerah",e:"Dubai",a:"Bab Al Shams, desert",c:"Arabic",t:"Experience",d:"Lamb ouzi from the open-air grill",r:4.4,p:4,x:"An open-air desert fort with a large Arabic buffet, live cooking stations and folk performances."},
+ {n:"Calicut Paragon",e:"Dubai",a:"Karama",c:"Indian (Kerala)",t:"Casual",d:"Malabar chicken biryani",r:4.3,p:1,x:"A Kerala favourite known for Malabar biryani, fish curry with appam and quick, friendly service."},
+ // Abu Dhabi
+ {n:"Erth",e:"Abu Dhabi",a:"Abu Dhabi Corniche",c:"Emirati",t:"Fine dining",d:"Modern Emirati tasting menu",r:4.6,p:4,x:"Refined Emirati cuisine in a heritage-inspired setting, reworking local ingredients like dates and camel milk."},
+ {n:"Meylas",e:"Abu Dhabi",a:"Al Mushrif",c:"Emirati",t:"Casual",d:"Regag bread with cheese and egg",r:4.4,p:2,x:"Traditional Emirati home cooking in a relaxed setting, a good first stop for local breakfast."},
+ {n:"Mezlai",e:"Abu Dhabi",a:"Emirates Palace",c:"Emirati",t:"Fine dining",d:"Slow-cooked lamb ouzi",r:4.5,p:4,x:"Emirati dishes served in an elegant room at Emirates Palace, with organic and local produce."},
+ {n:"Hakkasan",e:"Abu Dhabi",a:"Emirates Palace",c:"Cantonese",t:"Fine dining",d:"Peking duck with caviar",r:4.5,p:4,x:"Moody modern Cantonese dining with dim sum, wok dishes and a garden terrace."},
+ {n:"Talea by Antonio Guida",e:"Abu Dhabi",a:"Emirates Palace",c:"Italian",t:"Fine dining",d:"Handmade pasta of the day",r:4.6,p:4,x:"Family-style Italian cooking from a chef with a Michelin-recognised background, served in a warm, casual room."},
+ {n:"Li Beirut",e:"Abu Dhabi",a:"Jumeirah at Etihad Towers",c:"Lebanese",t:"Fine dining",d:"Modern mezze and lamb kibbeh",r:4.5,p:4,x:"Contemporary Lebanese dining high above the Corniche with views over the Gulf."},
+ {n:"Lebanese Flower",e:"Abu Dhabi",a:"Al Khalidiya",c:"Lebanese",t:"Casual",d:"Mixed grill with garlic toum",r:4.2,p:1,x:"A long-running local favourite for grills, fresh bread and big portions at low prices."},
+ {n:"Byblos Sur Mer",e:"Abu Dhabi",a:"InterContinental, Al Bateen",c:"Lebanese",t:"Fine dining",d:"Grilled hammour and mezze",r:4.5,p:3,x:"Lebanese seafood and mezze with a terrace overlooking the marina."},
+ // Sharjah
+ {n:"Zaatar w Zeit",e:"Sharjah",a:"Al Majaz Waterfront",c:"Lebanese",t:"Casual",d:"Zaatar manakish",r:4.1,p:1,x:"Lebanese bakery-style chain known for manakish, wraps and late-night opening hours."},
+ {n:"Calicut Paragon",e:"Sharjah",a:"Abu Shagara",c:"Indian (Kerala)",t:"Casual",d:"Malabar chicken biryani",r:4.2,p:1,x:"The Sharjah branch of the Kerala favourite, with the same biryani and seafood curries."},
+ {n:"Al Fanar Restaurant & Café",e:"Sharjah",a:"Sahara Centre area",c:"Emirati",t:"Casual",d:"Chicken machboos",r:4.2,p:2,x:"Old-Dubai styled Emirati dining with home-style rice dishes, stews and sweets."},
+ // Ras Al Khaimah
+ {n:"Lexington Grill",e:"Ras Al Khaimah",a:"Waldorf Astoria, Al Hamra",c:"Steakhouse",t:"Fine dining",d:"Dry-aged rib-eye",r:4.6,p:4,x:"A classic American-style steakhouse at the Waldorf Astoria with aged cuts and a large wine list."},
+];
+// ensure unique ids
+R.forEach((r,i)=>r.id=i);
+
+const $=s=>document.querySelector(s);
+const EMI=["All","Dubai","Abu Dhabi","Sharjah","Ras Al Khaimah"];
+const TYPES=["All","Fine dining","Bistro","Casual","Café","Street food","Experience"];
+const state={q:"",emi:"All",type:"All",cui:"",price:"",sort:"rating",fav:false};
+let favs=new Set();
+try{favs=new Set(JSON.parse(localStorage.getItem("sufra-favs")||"[]"))}catch(e){}
+const saveFavs=()=>{try{localStorage.setItem("sufra-favs",JSON.stringify([...favs]))}catch(e){}};
+const key=r=>r.n+"|"+r.e;
+
+const stars=v=>{const f=Math.round(v*2)/2;let s="";for(let i=1;i<=5;i++)s+= f>=i?"★":(f>=i-.5?"⯪":"☆");return s};
+const price=p=>"AED ".repeat(p).trim().split(" ").map(()=>"$").join("");
+const priceLabel=p=>["","Under AED 60","AED 60–150","AED 150–350","AED 350+"][p];
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+function chips(el,list,prop){
+  el.innerHTML=list.map(v=>`<button class="chip" data-v="${esc(v)}" aria-pressed="${state[prop]===v}">${esc(v)}</button>`).join("");
+  el.onclick=e=>{const b=e.target.closest(".chip");if(!b)return;state[prop]=b.dataset.v;chips(el,list,prop);render()};
+}
+chips($("#f-emirate"),EMI,"emi");
+chips($("#f-type"),TYPES,"type");
+const cuisines=[...new Set(R.map(r=>r.c))].sort();
+$("#f-cuisine").innerHTML=`<option value="">All cuisines</option>`+cuisines.map(c=>`<option>${esc(c)}</option>`).join("");
+
+$("#stats").innerHTML=`<span><b>${R.length}</b>restaurants</span><span><b>${cuisines.length}</b>cuisines</span><span><b>${new Set(R.map(r=>r.e)).size}</b>emirates</span>`;
+
+$("#q").oninput=e=>{state.q=e.target.value.trim().toLowerCase();render()};
+$("#f-cuisine").onchange=e=>{state.cui=e.target.value;render()};
+$("#f-price").onchange=e=>{state.price=e.target.value;render()};
+$("#sort").onchange=e=>{state.sort=e.target.value;render()};
+$("#favOnly").onclick=e=>{state.fav=!state.fav;e.currentTarget.setAttribute("aria-pressed",state.fav);render()};
+
+function filtered(){
+  let list=R.filter(r=>{
+    if(state.emi!=="All"&&r.e!==state.emi)return false;
+    if(state.type!=="All"&&r.t!==state.type)return false;
+    if(state.cui&&r.c!==state.cui)return false;
+    if(state.price&&r.p!==+state.price)return false;
+    if(state.fav&&!favs.has(key(r)))return false;
+    if(state.q){const h=(r.n+" "+r.a+" "+r.e+" "+r.c+" "+r.d+" "+r.t).toLowerCase();if(!state.q.split(/\s+/).every(w=>h.includes(w)))return false}
+    return true;
+  });
+  const s={rating:(a,b)=>b.r-a.r||a.n.localeCompare(b.n),name:(a,b)=>a.n.localeCompare(b.n),priceAsc:(a,b)=>a.p-b.p||b.r-a.r,priceDesc:(a,b)=>b.p-a.p||b.r-a.r}[state.sort];
+  return list.sort(s);
+}
+
+function render(){
+  const list=filtered();
+  $("#count").textContent=`${list.length} ${list.length===1?"restaurant":"restaurants"}${state.emi!=="All"?" in "+state.emi:""}`;
+  if(!list.length){
+    $("#grid").innerHTML=`<div class="empty" style="grid-column:1/-1">${state.fav&&!favs.size?"You haven't saved any restaurants yet. Tap ♡ on a listing to save it.":"No restaurants match these filters."}<br><button class="btn ghost" id="reset">Clear filters</button></div>`;
+    $("#reset").onclick=reset;return;
+  }
+  $("#grid").innerHTML=list.map(r=>`
+   <article class="card" tabindex="0" data-id="${r.id}" aria-label="${esc(r.n)}, ${esc(r.e)}">
+     <div class="c-top"><div><h3 class="c-name">${esc(r.n)}</h3><div class="c-loc">${esc(r.a)}</div></div>
+       <div class="rate"><b>${r.r.toFixed(1)}</b><span class="stars" aria-label="${r.r} out of 5">${stars(r.r)}</span></div></div>
+     <div class="badges"><span class="b b-cui">${esc(r.c)}</span><span class="b b-type">${esc(r.t)}</span><span class="b b-price" title="${priceLabel(r.p)}">${price(r.p)}</span></div>
+     <div class="sig"><small>Signature dish</small><p>${esc(r.d)}</p></div>
+     <div class="c-foot"><span class="emi">${esc(r.e)}</span><button class="heart" data-fav="${r.id}" aria-pressed="${favs.has(key(r))}" aria-label="Save ${esc(r.n)}">${favs.has(key(r))?"♥":"♡"}</button></div>
+   </article>`).join("");
+}
+function reset(){Object.assign(state,{q:"",emi:"All",type:"All",cui:"",price:"",fav:false});$("#q").value="";$("#f-cuisine").value="";$("#f-price").value="";$("#favOnly").setAttribute("aria-pressed","false");chips($("#f-emirate"),EMI,"emi");chips($("#f-type"),TYPES,"type");render()}
+
+function toggleFav(id){const k=key(R[id]);favs.has(k)?favs.delete(k):favs.add(k);saveFavs();render();if(!$("#sheet").hidden)open(id)}
+$("#grid").addEventListener("click",e=>{
+  const h=e.target.closest("[data-fav]");if(h){e.stopPropagation();toggleFav(+h.dataset.fav);return}
+  const c=e.target.closest(".card");if(c)open(+c.dataset.id);
+});
+$("#grid").addEventListener("keydown",e=>{if((e.key==="Enter"||e.key===" ")&&e.target.classList.contains("card")){e.preventDefault();open(+e.target.dataset.id)}});
+
+let lastFocus=null;
+function open(id){
+  const r=R[id];lastFocus=lastFocus||document.activeElement;
+  const map="https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(r.n+", "+r.a+", "+r.e+", UAE");
+  const similar=R.filter(o=>o.id!==r.id&&(o.c===r.c||o.t===r.t)&&o.e===r.e).sort((a,b)=>b.r-a.r).slice(0,3);
+  $("#sheet").innerHTML=`
+    <button class="close" id="close">Close ✕</button>
+    <div><div class="emi">${esc(r.e)} · ${esc(r.a)}</div><h3 id="d-name">${esc(r.n)}</h3></div>
+    <div class="big-rate"><b>${r.r.toFixed(1)}</b><div><div class="stars">${stars(r.r)}</div><div class="c-loc">Approximate average rating out of 5</div></div></div>
+    <p class="about">${esc(r.x)}</p>
+    <dl class="facts">
+      <dt>Cuisine</dt><dd>${esc(r.c)}</dd>
+      <dt>Signature</dt><dd>${esc(r.d)}</dd>
+      <dt>Type</dt><dd>${esc(r.t)}</dd>
+      <dt>Price</dt><dd>${price(r.p)} · ${priceLabel(r.p)} per person</dd>
+      <dt>Location</dt><dd>${esc(r.a)}, ${esc(r.e)}</dd>
+      ${r.y?`<dt>Since</dt><dd>${r.y}</dd>`:""}
+    </dl>
+    <div class="acts"><a class="btn" href="${map}" target="_blank" rel="noopener">Directions on Google Maps ↗</a>
+      <button class="btn ghost" id="d-fav">${favs.has(key(r))?"♥ Saved":"♡ Save"}</button></div>
+    ${similar.length?`<div><div class="lbl" style="margin-bottom:8px">More like this in ${esc(r.e)}</div><div class="badges">${similar.map(s=>`<button class="chip" data-open="${s.id}">${esc(s.n)} · ${s.r.toFixed(1)}</button>`).join("")}</div></div>`:""}`;
+  $("#sheet").hidden=false;$("#scrim").hidden=false;
+  $("#close").onclick=close;$("#d-fav").onclick=()=>toggleFav(id);
+  $("#sheet").querySelectorAll("[data-open]").forEach(b=>b.onclick=()=>open(+b.dataset.open));
+  $("#close").focus();
+}
+function close(){$("#sheet").hidden=true;$("#scrim").hidden=true;if(lastFocus)lastFocus.focus();lastFocus=null}
+$("#scrim").onclick=close;
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("#sheet").hidden)close()});
+render();
+</script>
+</body>
+</html>
